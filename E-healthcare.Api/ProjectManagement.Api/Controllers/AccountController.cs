@@ -21,6 +21,24 @@ namespace Ehealthcare.Api.Controllers
             UserRepository = UserRepo;
         }
 
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("Register")]
+        public async Task<IActionResult> Register(User user)
+        {
+            if (this.ModelState.IsValid)
+            {
+                await UserRepository.Add(user);
+            }
+            else
+            {
+                return BadRequest("All fields are required");
+            }
+
+            return Ok();
+        }
+
         [AllowAnonymous]
         [HttpPost]
         [Route("Login")]
