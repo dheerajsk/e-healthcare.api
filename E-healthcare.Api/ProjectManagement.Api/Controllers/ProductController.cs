@@ -1,16 +1,12 @@
 ﻿using EHealthcare.Entities;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Data;
-using ProjectManagement.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ProjectManagement.Api.Controllers
 {
     [ApiController]
-    [Route("api/Product")]
+    [Route("api/admin")]
     public class ProductController : BaseController<Product>
     {
         private IBaseRepository<Category> CatRepository { get; set; }
@@ -19,15 +15,38 @@ namespace ProjectManagement.Api.Controllers
             CatRepository = repository;
         }
 
-        public override IActionResult Get(long? id)
+        [HttpPost("addMedicine")]
+        public async Task<IActionResult> AddMedicine(Product product)
         {
-            Product product = new Product();
-            if (id.HasValue && id > 0)
-            {
-                product = Repository.Get(id.Value);
-            }
-            product.Categories = CatRepository.Get();
-            return Ok(product);
+            return await base.Post(product);
+
+        }
+
+        [HttpPut("updateMedicine")]
+        public async Task<IActionResult> UpdateMedicine(Product product)
+        {
+            return await base.Post(product);
+
+        }
+
+        [HttpGet("getAllMedicine")]
+        public IActionResult Get()
+        {
+            return base.Get();
+        }
+
+        [HttpGet("getMedicineById/{mid}")]
+        public IActionResult UpdateMedicine(long id)
+        {
+            return base.Get(id);
+
+        }
+
+        [HttpDelete("deleteMedicineById/{mid}")]
+        public async Task<IActionResult> DeleteMedicine(long id)
+        {
+            return await base.Delete(id);
+
         }
     }
 }

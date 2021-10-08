@@ -13,19 +13,16 @@ namespace EHealthcare.Entities
 
         public string Name { get; set; }
 
-        public string Detail { get; set; }
+        public string CompanyName { get; set; }
 
         public double Price { get; set; }
 
-        public string ImgSrc { get; set; }
+        public int Quantity { get; set; }
 
-        public long CategoryID { get; set; }
+        public string ImageUrl { get; set; }
 
-        public bool IsActive { get; set; }
+        public string Uses { get; set; }
 
-        public virtual Category Category { get; set; }
-
-        [NotMapped]
-        public virtual IEnumerable<Category> Categories { get; set; }
+        public string ExpireDate { get; set; }
     }
 }

@@ -1,64 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EHealthcare.Entities;
-using Microsoft.AspNetCore.Authorization;
+﻿using Ehealthcare.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Ehealthcare.Api.Controllers
+namespace EHealthcare.Api.Controllers
 {
-    [Route("api/Account")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountController : Controller
     {
-
-        private readonly IBaseRepository<User> UserRepository;
-        public AccountController(IBaseRepository<User> UserRepo)
+        private IBaseRepository<Account> AccountRepo { get; set; }
+        public AccountController(IBaseRepository<Account> repository)
         {
-            UserRepository = UserRepo;
+            AccountRepo = repository;
         }
 
-
-        [AllowAnonymous]
-        [HttpPost]
-        [Route("Register")]
-        public async Task<IActionResult> Register(User user)
+        [HttpGet("accountInfo/{email}")]
+        public Account getAccountDetails(String email)
         {
-            if (this.ModelState.IsValid)
-            {
-                await UserRepository.Add(user);
-            }
-            else
-            {
-                return BadRequest("All fields are required");
-            }
-
-            return Ok();
+            return AccountRepo.Get().Where(a => a.Email == email).FirstOrDefault();
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        [Route("Login")]
-        public async Task<IActionResult> LoginUser(string email, string password)
+        [HttpPut("addFunds")]
+        public String AddFunds([FromBody] Account account)
         {
-            if (this.ModelState.IsValid)
-            {
-                AuthService authService = new AuthService(UserRepository);
-                AuthUserModel response = await authService.Authenticate(email, password).ConfigureAwait(true);
-                if (response != null)
-                {
-                    return this.Ok(response);
-                }
-                else
-                {
-                    return this.BadRequest(new { error = "invalid_grant", error_description = "Invalid Credentials" });
-                }
-            }
-
-            return this.BadRequest();
+            var result = AccountRepo.Get().Where(a => a.Email == account.Email).First();
+            account.Amount = result.Amount + account.Amount;
+            var updated = AccountRepo.Update(account).Result;
+            return "Account updated";
         }
     }
 }

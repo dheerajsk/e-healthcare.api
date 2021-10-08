@@ -1,4 +1,5 @@
-﻿using EHealthcare.Entities;
+﻿using Ehealthcare.Entities.Dto;
+using EHealthcare.Entities;
 using Microsoft.IdentityModel.Tokens;
 using ProjectManagement.Data;
 using System;
@@ -19,9 +20,18 @@ namespace Ehealthcare.Api
             UserRepository = UserRepo;
         }
 
-        public async Task<AuthUserModel> Authenticate(string email, string password)
+        public async Task<AuthUserModel> Authenticate(LoginDto login)
         {
-            var result = UserRepository.Get().Where(u => u.Email == email && u.Password == password).FirstOrDefault();
+            User result = null;
+            if (login.Type == "admin")
+            {
+
+                result = UserRepository.Get().Where(u => u.Email == login.Email && u.Password == login.Password && u.IsAdmin).FirstOrDefault();
+            }
+            else
+            {
+                result = UserRepository.Get().Where(u => u.Email == login.Email && u.Password == login.Password).FirstOrDefault();
+            }
             if (result is null)
             {
                 return null;

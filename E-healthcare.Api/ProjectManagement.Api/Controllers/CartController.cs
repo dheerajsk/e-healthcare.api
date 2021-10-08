@@ -18,10 +18,10 @@ namespace ProjectManagement.Api.Controllers
             CartItemRepository = _CartRepository;
         }
 
-        [HttpGet("GetByUserID")]
-        public IActionResult Get()
+        [HttpGet("GetByUserID/{id}")]
+        public IActionResult Get(long userID)
         {
-            Cart result = Repository.Get().Where(i => i.OwnerID == SessionUser.ID).FirstOrDefault();
+            Cart result = Repository.Get().Where(i => i.OwnerID == userID).FirstOrDefault();
             if (result is null)
             {
                 return NoContent();
@@ -30,15 +30,15 @@ namespace ProjectManagement.Api.Controllers
             return Ok(result);
         }
 
-        [Route("PlaceOrder")]
+        [Route("PlaceOrder/{userID}")]
         [HttpPost]
-        public async Task<IActionResult> PlaceOrder()
+        public async Task<IActionResult> PlaceOrder(long userID)
         {
-            var userCart = Repository.Get().Where(i => i.OwnerID == SessionUser.ID).FirstOrDefault();
+            var userCart = Repository.Get().Where(i => i.OwnerID == userID).FirstOrDefault();
 
             if (userCart is null)
             {
-                userCart = await Repository.Add(new Cart { OwnerID = SessionUser.ID });
+                userCart = await Repository.Add(new Cart { OwnerID = userID });
             }
             foreach (var item in userCart.Items)
             {
@@ -49,13 +49,13 @@ namespace ProjectManagement.Api.Controllers
 
         [Route("Add/{productID}")]
         [HttpPost]
-        public async Task<IActionResult> Post(long productID)
+        public async Task<IActionResult> Post(long productID, long userID)
         {
-            var userCart = Repository.Get().Where(i => i.OwnerID == SessionUser.ID).FirstOrDefault();
+            var userCart = Repository.Get().Where(i => i.OwnerID == userID).FirstOrDefault();
 
             if (userCart is null)
             {
-                userCart = await Repository.Add(new Cart { OwnerID = SessionUser.ID });
+                userCart = await Repository.Add(new Cart { OwnerID = userID });
             }
             var cartItem = new CartItem { CartID = userCart.ID, ProductID = productID };
             var result = CartItemRepository.Add(cartItem);
