@@ -14,4 +14,3 @@ ABC Healthcare is a Mumbai-based pharma company which sales medicines throughout
 However in recent years since all industries are coming online to boost their sales and cover larger market space, ABC Healthcare missed the chance and as a result their sales has been dropping since last 2 years. To overcome this and bring sales back on track they have decided to bring their service online to allow their customers to purchase medicines by their web application.
 You are hired as one of the Full Stack .Net developer and have been asked to  develop the web application. The management team has provided you the  requirements and their business model so that you can easily arrange different  components of the application. 
 
-![image](https://user-images.githubusercontent.com/16190489/136495854-c04ec60b-46ec-4006-9a0f-2e88a1448b16.png)
